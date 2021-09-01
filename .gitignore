@@ -1,0 +1,7 @@
+.vscode
+.DS_Store
+*.out
+*.o
+*.a
+minitalk_client
+minitalk_server
