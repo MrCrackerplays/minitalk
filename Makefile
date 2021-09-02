@@ -8,7 +8,7 @@ O_SERVER := minitalk_server.o
 O_SERVER := $(addprefix obj/,$(O_SERVER))
 O_CLIENT := minitalk_client.o
 O_CLIENT := $(addprefix obj/,$(O_CLIENT))
-HEADER_FILES := 
+HEADER_FILES := minitalk_client.h
 HEADER_FILES := $(addprefix headers/,$(HEADER_FILES))
 
 all: $(NAME)
