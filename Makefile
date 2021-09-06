@@ -24,6 +24,7 @@ $(word 2, $(NAME)): $(O_CLIENT)
 	@$(CC) $(CFLAGS) $(O_CLIENT) ft_printf/libftprintf.a -o $(word 2, $(NAME))
 
 obj/%.o: src/%.c $(HEADER_FILES)
+	@mkdir -p obj
 	@$(CC) $(CFLAGS) $(OBJ_FLAGS) -c $< -o $@
 
 clean:

@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/01 13:11:42 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/09/02 17:55:20 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/09/06 18:03:41 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,14 @@ int	main(void)
 	int		count;
 
 	pid = getpid();
-	str = malloc(sizeof(char));
-	*str = '\0';
+	str = ft_calloc(1, sizeof(char));
 	chr[1] = '\0';
 	chr[0] = '~';
 	count = 0;
 	ft_printf("PID:%i\n", pid);
 	signal(SIGUSR1, bit_from_signal);
 	signal(SIGUSR2, bit_from_signal);
+	// sigaction(SIGUSR1, (struct sigaction){}, )
 	while (1)
 	{
 		pause();
@@ -80,8 +80,7 @@ int	main(void)
 		{
 			ft_printf("[client]>%s\n", str);
 			free(str);
-			str = malloc(sizeof(char));
-			*str = '\0';
+			str = ft_calloc(1, sizeof(char));
 			chr[0] = '~';
 		}
 	}
