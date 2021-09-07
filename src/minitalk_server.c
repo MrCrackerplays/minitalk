@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/01 13:11:42 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/09/06 18:03:41 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/09/07 18:01:25 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,72 +15,78 @@
 #include <stdlib.h>
 #include "../ft_printf/libft/libft.h"
 #include "../ft_printf/ft_printf.h"
+#include "../headers/error_handling.h"
+#include "../headers/minitalk_server.h"
 
-int	*get_byte(void)
+t_signal_data	*get_data_holder(void)
 {
-	static int	value;
+	static t_signal_data	data;
 
-	return (&value);
+	return (&data);
 }
 
-int	*bit_count(void)
+void	bit_from_signal(int signum, siginfo_t *siginfo, void *context)
 {
-	static int	count;
-
-	return (&count);
-}
-
-void	bit_from_signal(int signum)
-{
+	(void) context;
+	get_data_holder()->client_pid = siginfo->si_pid;
 	if (signum == SIGUSR1)
-		(*get_byte()) = *get_byte() & ~(1 << *bit_count());
+		get_data_holder()->byte = get_data_holder()->byte
+		& ~(1 << get_data_holder()->byte_progress);
 	else if (signum == SIGUSR2)
-		(*get_byte()) = *get_byte() | 1 << *bit_count();
-	(*bit_count())++;
+		get_data_holder()->byte = get_data_holder()->byte
+		| 1 << get_data_holder()->byte_progress;
+	usleep(100);
+	kill(siginfo->si_pid, signum);
+	(get_data_holder()->byte_progress)++;
 }
 
 int	main(void)
 {
-	int		pid;
-	char	*str;
-	char	*temp;
-	char	chr[2];
-	int		count;
+	char				*str;
+	char				*temp;
+	char				chr[2];
+	int					count;
+	struct sigaction	sig;
 
-	pid = getpid();
 	str = ft_calloc(1, sizeof(char));
+	if (str == NULL)
+		call_error("Malloc fail\n");
 	chr[1] = '\0';
 	chr[0] = '~';
 	count = 0;
-	ft_printf("PID:%i\n", pid);
-	signal(SIGUSR1, bit_from_signal);
-	signal(SIGUSR2, bit_from_signal);
-	// sigaction(SIGUSR1, (struct sigaction){}, )
+	ft_printf("PID:%i\n", getpid());
+	sig.sa_sigaction = bit_from_signal;
+	sig.sa_flags = SA_SIGINFO;
+	sigemptyset(&sig.sa_mask);
+	sigaddset(&sig.sa_mask, SIGUSR1);
+	sigaddset(&sig.sa_mask, SIGUSR2);
+	if (sigaction(SIGUSR1, &sig, NULL) != 0)
+		call_error("Sigaction sig1 error\n");
+	if (sigaction(SIGUSR2, &sig, NULL) != 0)
+		call_error("Sigaction sig2 error\n");
 	while (1)
 	{
 		pause();
 		count++;
 		if (count % 8 == 0)
 		{
-			chr[0] = (char)(*get_byte());
-			// ft_printf("\n8deel:'%c'", chr[0]);
+			chr[0] = get_data_holder()->byte;
 			temp = ft_strjoin(str, &chr[0]);
 			if (str != NULL)
 				free(str);
 			if (temp == NULL)
-			{
-				write(2, "strjoin fail\n", 14);
-				exit(1);
-			}
+				call_error("Strjoin fail\n");
 			str = temp;
-			*get_byte() = 0;
-			*bit_count() = 0;
+			get_data_holder()->byte = 0;
+			get_data_holder()->byte_progress = 0;
 		}
 		if (str != NULL && chr[0] == '\0')
 		{
-			ft_printf("[client]>%s\n", str);
+			ft_printf("[client %i]>%s\n", get_data_holder()->client_pid, str);
 			free(str);
 			str = ft_calloc(1, sizeof(char));
+			if (str == NULL)
+				call_error("Malloc fail\n");
 			chr[0] = '~';
 		}
 	}

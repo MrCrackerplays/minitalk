@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   minitalk_client.h                                  :+:    :+:            */
+/*   error_handling.h                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/09/02 10:46:45 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/09/07 18:01:34 by pdruart       ########   odam.nl         */
+/*   Created: 2021/09/07 11:58:17 by pdruart       #+#    #+#                 */
+/*   Updated: 2021/09/07 11:58:58 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_CLIENT_H
-# define MINITALK_CLIENT_H
-# define DELAY 100
+#ifndef ERROR_HANDLING_H
+# define ERROR_HANDLING_H
+void	call_error(const char *message);
 
 #endif
