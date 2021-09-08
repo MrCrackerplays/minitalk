@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/01 13:24:49 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/09/07 18:01:42 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/09/08 17:02:20 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "../ft_printf/libft/libft.h"
+#include "../ft_printf/ft_printf.h"
 #include "../headers/minitalk_client.h"
 #include "../headers/error_handling.h"
 
@@ -47,10 +48,11 @@ int	send_byte(int pid, char byte)
 	sig.sa_sigaction = acknowledgement;
 	sig.sa_flags = SA_SIGINFO;
 	sigemptyset(&sig.sa_mask);
-	sigaddset(&sig.sa_mask, SIGUSR1);
 	sigaddset(&sig.sa_mask, SIGUSR2);
 	if (sigaction(SIGUSR1, &sig, NULL) != 0)
 		call_error("Sigaction sig1 error\n");
+	sigemptyset(&sig.sa_mask);
+	sigaddset(&sig.sa_mask, SIGUSR1);
 	if (sigaction(SIGUSR2, &sig, NULL) != 0)
 		call_error("Sigaction sig2 error\n");
 	while (i <= 0b10000000 && i > 0)
@@ -62,6 +64,7 @@ int	send_byte(int pid, char byte)
 		usleep(DELAY);
 		ret += kill(pid, signal);
 		pause();
+		usleep(DELAY);
 		i <<= 1;
 	}
 	return (ret);
@@ -77,6 +80,7 @@ int	main(int argc, char **argv)
 		return (1);
 	pid = ft_atoi(argv[1]);
 	i = 0;
+	ft_printf("I am client %i!\n", getpid());
 	while (argv[2][i] != '\0')
 	{
 		ret = send_byte(pid, argv[2][i]);
