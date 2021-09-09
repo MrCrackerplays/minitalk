@@ -4,12 +4,11 @@ CFLAGS ?= -Wall -Werror -Wextra
 ifdef DEBUG
 CFLAGS := -g $(CFLAGS)
 endif
-O_UNIVERSAL := error_handling.o
-O_SERVER := minitalk_server.o $(O_UNIVERSAL)
+O_SERVER := minitalk_server.o
 O_SERVER := $(addprefix obj/,$(O_SERVER))
-O_CLIENT := minitalk_client.o $(O_UNIVERSAL)
+O_CLIENT := minitalk_client.o
 O_CLIENT := $(addprefix obj/,$(O_CLIENT))
-HEADER_FILES := minitalk_client.h error_handling.h
+HEADER_FILES := minitalk_client.h minitalk.h
 HEADER_FILES := $(addprefix headers/,$(HEADER_FILES))
 
 all: $(NAME)
@@ -33,6 +32,7 @@ clean:
 	$(MAKE) clean -C ./ft_printf
 	@rm -f $(O_SERVER)
 	@rm -f $(O_CLIENT)
+	@rmdir obj
 
 fclean: clean
 	@echo "[minitalk] fully cleaning minitalk"
