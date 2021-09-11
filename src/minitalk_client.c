@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/01 13:24:49 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/09/09 17:56:52 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/09/11 15:36:04 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "../ft_printf/libft/libft.h"
 #include "../ft_printf/ft_printf.h"
 #include "../headers/minitalk.h"
-#include "../headers/minitalk_client.h"
 
 t_signal_data	*get_data_holder(void)
 {
@@ -40,7 +39,7 @@ void	send_bit(void)
 	if (get_data_holder()->byte_progress == 8)
 	{
 		if (get_data_holder()->byte == '\0')
-			print_exit_fd("Client %i finished sending message!\n", 0, 0);
+			print_exit_fd("Client finished sending message!\n", 0, 0);
 		get_data_holder()->byte = get_data_holder()->str[0];
 		get_data_holder()->str++;
 		get_data_holder()->byte_progress = 0;
@@ -49,11 +48,9 @@ void	send_bit(void)
 	if (get_data_holder()->byte & (char)(0b00000001
 		<< get_data_holder()->byte_progress))
 		signal = SIGUSR2;
-	usleep(DELAY);
-	if (kill(get_data_holder()->pid, signal) < 0)
-		print_exit_fd("Something went wrong trying to send data\n", 1, 2);
-	usleep(DELAY);
 	get_data_holder()->byte_progress++;
+	if (kill(get_data_holder()->pid, signal) != 0)
+		print_exit_fd("Something went wrong trying to send data\n", 1, 2);
 }
 
 void	acknowledgement(int signum)
