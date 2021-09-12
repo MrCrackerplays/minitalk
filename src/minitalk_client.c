@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/01 13:24:49 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/09/11 15:36:04 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/09/12 10:51:28 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,12 @@ void	acknowledgement(int signum)
 int	main(int argc, char **argv)
 {
 	int	pid;
-	int	i;
 
 	if (argc != 3)
 		return (1);
 	pid = ft_atoi(argv[1]);
 	get_data_holder()->pid = pid;
 	get_data_holder()->str = argv[2];
-	i = 0;
 	ft_printf("Client %i started sending message!\n", getpid());
 	signal(SIGUSR1, acknowledgement);
 	signal(SIGUSR2, acknowledgement);

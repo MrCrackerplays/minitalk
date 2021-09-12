@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/01 13:11:42 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/09/11 15:35:51 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/09/12 10:51:39 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,5 @@ int	main(void)
 		call_error("Sigaction sig2 error\n");
 	while (1)
 		pause();
+	return (0);
 }
