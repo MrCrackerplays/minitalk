@@ -1,4 +1,4 @@
-NAME := minitalk_server minitalk_client
+NAME := server client
 
 CFLAGS ?= -Wall -Werror -Wextra
 ifdef DEBUG

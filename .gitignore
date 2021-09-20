@@ -3,5 +3,5 @@
 *.out
 *.o
 *.a
-minitalk_client
-minitalk_server
+client
+server
